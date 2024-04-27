@@ -1,0 +1,7 @@
+dist
+node_modules
+.eslintrc.cjs
+**/*.json
+**/*.config.js
+index.html
+pnpm-lock.yaml
