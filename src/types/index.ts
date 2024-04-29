@@ -1,4 +1,14 @@
 import {Output} from 'valibot';
-import {DraftProductSchema} from '../schemas';
+import {
+	DraftProductSchemaCreate,
+	DraftProductSchemaUpdate,
+	ProductSchema,
+} from '../schemas';
 
-export type Product = Output<typeof DraftProductSchema>;
+export type NewProduct = Output<typeof DraftProductSchemaCreate>;
+export type Product = Output<typeof ProductSchema>;
+export type UpdateProduct = Output<typeof DraftProductSchemaUpdate>;
+export type AvailabilityOptions = {
+	name: string;
+	value: boolean;
+};
