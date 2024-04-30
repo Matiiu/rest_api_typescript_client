@@ -1,4 +1,4 @@
-export default function Header() {
+function Header() {
 	return (
 		<header className='bg-slate-800'>
 			<div className='mx-auto max-w-6xl py-10'>
@@ -9,3 +9,5 @@ export default function Header() {
 		</header>
 	);
 }
+
+export default Header;
