@@ -1,16 +1,21 @@
-import {Link, useLoaderData} from 'react-router-dom';
-import {getProducts} from '../services/ProductServices';
-import {Product} from '../types';
+import { ActionFunctionArgs, Link, useLoaderData } from 'react-router-dom';
+import { getProducts, updateAvailability } from '../services/ProductServices';
+import { Product } from '../types';
 import ProductDetail from '../components/ProductDetail';
-import {useMemo} from 'react';
+import { useMemo } from 'react';
 
-export async function loader() {
+async function loader() {
 	return await getProducts();
 }
 
-export default function Products() {
-	const products = useLoaderData() as Product[];
+async function action({ request }: ActionFunctionArgs) {
+	const { id } = Object.fromEntries(await request.formData());
+	await updateAvailability(+id);
+	return null;
+}
 
+function Products() {
+	const products = useLoaderData() as Product[];
 	const hasProducts = useMemo(() => !!products.length, [products]);
 
 	return (
@@ -53,3 +58,6 @@ export default function Products() {
 		</>
 	);
 }
+
+export default Products;
+export { loader, action };

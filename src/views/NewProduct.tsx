@@ -7,9 +7,10 @@ import {
 } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 
-import {handleAddProduct} from '../handlers/ProductHandlers';
+import { handleAddProduct } from '../handlers/ProductHandlers';
+import ProductForm from '../components/ProductForm';
 
-export async function action({request}: ActionFunctionArgs) {
+async function action({ request }: ActionFunctionArgs) {
 	const data = Object.fromEntries(await request.formData());
 
 	if (Object.values(data).some((val) => !val)) {
@@ -20,7 +21,7 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect('/');
 }
 
-export default function NewProduct() {
+function NewProduct() {
 	const error = useActionData() as string;
 
 	return (
@@ -41,36 +42,7 @@ export default function NewProduct() {
 				className='mt-10'
 				method='POST'
 			>
-				<div className='mb-4'>
-					<label
-						className='text-gray-800'
-						htmlFor='name'
-					>
-						Nombre Producto:
-					</label>
-					<input
-						id='name'
-						type='text'
-						className='mt-2 block w-full p-3 bg-gray-50'
-						placeholder='Nombre del Producto'
-						name='name'
-					/>
-				</div>
-				<div className='mb-4'>
-					<label
-						className='text-gray-800'
-						htmlFor='price'
-					>
-						Precio:
-					</label>
-					<input
-						id='price'
-						type='number'
-						className='mt-2 block w-full p-3 bg-gray-50'
-						placeholder='Precio Producto. ej. 200, 300'
-						name='price'
-					/>
-				</div>
+				<ProductForm />
 				<input
 					type='submit'
 					className='mt-5 w-full bg-indigo-600 p-2 text-white font-bold text-lg cursor-pointer rounded'
@@ -80,3 +52,7 @@ export default function NewProduct() {
 		</>
 	);
 }
+
+export default NewProduct;
+
+export { action };

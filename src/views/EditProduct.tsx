@@ -9,11 +9,11 @@ import {
 } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 
-import {handleGetProduct, handleUpdateProduct} from '../handlers/ProductHandlers';
-import type {Product} from '../types';
-import {availabilityOptions} from '../data/availabilityOptions';
+import { handleGetProduct, handleUpdateProduct } from '../handlers/ProductHandlers';
+import type { Product } from '../types';
+import ProductForm from '../components/ProductForm';
 
-export async function loader({params}: LoaderFunctionArgs) {
+async function loader({ params }: LoaderFunctionArgs) {
 	const result = await handleGetProduct(params);
 	if (!result) {
 		throw new Response('server-error', {
@@ -24,7 +24,7 @@ export async function loader({params}: LoaderFunctionArgs) {
 	return result;
 }
 
-export async function action({request, params}: ActionFunctionArgs) {
+async function action({ request, params }: ActionFunctionArgs) {
 	const data = Object.fromEntries(await request.formData());
 
 	if (Object.values(data).some((val) => !val)) {
@@ -34,7 +34,7 @@ export async function action({request, params}: ActionFunctionArgs) {
 	return redirect('/');
 }
 
-export default function EditProduct() {
+function EditProduct() {
 	const error = useActionData() as string;
 	const product = useLoaderData() as Product;
 
@@ -56,70 +56,21 @@ export default function EditProduct() {
 				className='mt-10'
 				method='POST'
 			>
-				<div className='mb-4'>
-					<label
-						className='text-gray-800'
-						htmlFor='name'
-					>
-						Nombre Producto:
-					</label>
-					<input
-						id='name'
-						type='text'
-						className='mt-2 block w-full p-3 bg-gray-50'
-						placeholder='Nombre del Producto'
-						name='name'
-						defaultValue={product.name}
-					/>
-				</div>
-
-				<div className='mb-4'>
-					<label
-						className='text-gray-800'
-						htmlFor='price'
-					>
-						Precio:
-					</label>
-					<input
-						id='price'
-						type='number'
-						className='mt-2 block w-full p-3 bg-gray-50'
-						placeholder='Precio Producto. ej. 200, 300'
-						name='price'
-						defaultValue={product.price}
-					/>
-				</div>
-
-				<div className='mb-4'>
-					<label
-						className='text-gray-800'
-						htmlFor='availability'
-					>
-						Disponibilidad:
-					</label>
-					<select
-						id='availability'
-						className='mt-2 block w-full p-3 bg-gray-50'
-						name='availability'
-						defaultValue={product.availability.toString()}
-					>
-						{availabilityOptions.map((option) => (
-							<option
-								key={option.name}
-								value={option.value.toString()}
-							>
-								{option.name}
-							</option>
-						))}
-					</select>
-				</div>
+				<ProductForm
+					product={product}
+					isAvailability={true}
+				/>
 
 				<input
 					type='submit'
 					className='mt-5 w-full bg-indigo-600 p-2 text-white font-bold text-lg cursor-pointer rounded'
-					value='Registrar Producto'
+					value='Guardar Cambios'
 				/>
 			</Form>
 		</>
 	);
 }
+
+export default EditProduct;
+
+export { action, loader };

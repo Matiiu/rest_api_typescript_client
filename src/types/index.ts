@@ -1,4 +1,4 @@
-import {Output} from 'valibot';
+import { Output } from 'valibot';
 import {
 	DraftProductSchemaCreate,
 	DraftProductSchemaUpdate,

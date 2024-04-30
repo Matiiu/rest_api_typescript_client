@@ -1,19 +1,21 @@
-import {safeParse, coerce, number, parse} from 'valibot';
-import {DraftProductSchemaCreate, DraftProductSchemaUpdate} from '../schemas';
+import { Params } from 'react-router-dom';
+import { safeParse, coerce, number, parse } from 'valibot';
+
+import { DraftProductSchemaCreate, DraftProductSchemaUpdate } from '../schemas';
 import {
 	addProduct,
+	deleteProduct,
 	getProductById,
 	updateProduct,
 } from '../services/ProductServices';
-import {Params} from 'react-router-dom';
-import type {NewProduct, UpdateProduct} from '../types';
-import {toBoolean} from '../utils/index';
+import type { NewProduct, UpdateProduct } from '../types';
+import { toBoolean } from '../utils/index';
 
 type ProductData = {
 	[k: string]: FormDataEntryValue;
 };
 
-export async function handleAddProduct(data: ProductData) {
+async function handleAddProduct(data: ProductData) {
 	try {
 		const result = safeParse(DraftProductSchemaCreate, {
 			name: data.name,
@@ -21,9 +23,9 @@ export async function handleAddProduct(data: ProductData) {
 		});
 
 		if (!result.success) {
-			const msgsErrors = result.issues.map((msg, i) => `${i + 1}. ${msg.message}`);
-			const msgsErrorsStr = msgsErrors.join(',\n');
-			throw new Error(`Invalid Data:\n${msgsErrorsStr}`);
+			const msgErrors = result.issues.map((msg, i) => `${i + 1}. ${msg.message}`);
+			const msgErrorsStr = msgErrors.join(',\n');
+			throw new Error(`Invalid Data:\n${msgErrorsStr}`);
 		}
 
 		const product: NewProduct = result.output;
@@ -34,7 +36,7 @@ export async function handleAddProduct(data: ProductData) {
 	}
 }
 
-export async function handleGetProduct(params: Params<string>) {
+async function handleGetProduct(params: Params<string>) {
 	try {
 		const id = params.id ? parseInt(params.id) : 0;
 		if (isNaN(id)) {
@@ -46,10 +48,7 @@ export async function handleGetProduct(params: Params<string>) {
 	}
 }
 
-export async function handleUpdateProduct(
-	params: Params<string>,
-	data: ProductData
-) {
+async function handleUpdateProduct(params: Params<string>, data: ProductData) {
 	try {
 		const NumberSchema = coerce(number(), Number);
 
@@ -60,9 +59,9 @@ export async function handleUpdateProduct(
 		});
 
 		if (!result.success) {
-			const msgsErrors = result.issues.map((msg, i) => `${i + 1}. ${msg.message}`);
-			const msgsErrorsStr = msgsErrors.join(',\n');
-			throw new Error(`Invalid Data:\n${msgsErrorsStr}`);
+			const msgErrors = result.issues.map((msg, i) => `${i + 1}. ${msg.message}`);
+			const msgErrorsStr = msgErrors.join(',\n');
+			throw new Error(`Invalid Data:\n${msgErrorsStr}`);
 		}
 
 		const id = params.id ? parseInt(params.id) : 0;
@@ -70,10 +69,29 @@ export async function handleUpdateProduct(
 			throw new Error('Invalid ID');
 		}
 
-		const product: UpdateProduct = {...result.output};
+		const product: UpdateProduct = { ...result.output };
 
 		return await updateProduct(id, product);
 	} catch (err) {
 		console.error(err);
 	}
 }
+
+async function handleDeleteProduct(params: Params<string>) {
+	try {
+		const id = params.id ? parseInt(params.id) : 0;
+		if (isNaN(id)) {
+			throw new Error('Invalid ID');
+		}
+		return await deleteProduct(id);
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+export {
+	handleAddProduct,
+	handleGetProduct,
+	handleUpdateProduct,
+	handleDeleteProduct,
+};
