@@ -40,19 +40,27 @@ function Products() {
 							<th className='p-2'>Acciones</th>
 						</tr>
 					</thead>
-
-					{hasProducts ? (
-						<tbody>
-							{products.map((product) => (
+					<tbody>
+						{hasProducts ? (
+							products.map((product) => (
 								<ProductDetail
 									key={product.id}
 									product={product}
 								/>
-							))}
-						</tbody>
-					) : (
-						<div>Actualmente no hay productos disponibles</div>
-					)}
+							))
+						) : (
+							<tr>
+								<td
+									colSpan={4}
+									className='text-center align-middle'
+								>
+									<div className='w-full text-center mt-5'>
+										Actualmente no hay productos disponibles.
+									</div>
+								</td>
+							</tr>
+						)}
+					</tbody>
 				</table>
 			</div>
 		</>
